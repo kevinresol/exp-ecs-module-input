@@ -14,14 +14,27 @@ private typedef Components = {
 	final interactive:MouseInteractive;
 }
 
+private typedef Lists = {
+	final mouses:NodeList<MouseComponents>;
+	final nodes:NodeList<Components>;
+}
+
 @:nullSafety(Off)
 class DetectMouseInteraction2 extends System {
+	final lists:Lists;
+
 	var mouses:Array<Node<MouseComponents>>;
 	var nodes:Array<Node<Components>>;
 
-	public function new(init:{mouses:NodeList<MouseComponents>, nodes:NodeList<Components>}) {
-		init.mouses.bind(v -> this.mouses = v, tink.state.Scheduler.direct);
-		init.nodes.bind(v -> this.nodes = v, tink.state.Scheduler.direct);
+	public function new(lists) {
+		this.lists = lists;
+	}
+
+	override function initialize():tink.core.Callback.CallbackLink {
+		return [
+			lists.mouses.bind(v -> this.mouses = v, tink.state.Scheduler.direct),
+			lists.nodes.bind(v -> this.nodes = v, tink.state.Scheduler.direct),
+		];
 	}
 
 	override function update(dt:Float) {
@@ -54,7 +67,7 @@ class DetectMouseInteraction2 extends System {
 		}
 	}
 
-	public static function getNodes(world:World) {
+	public static function getNodes(world:World):Lists {
 		// @formatter:off
 		return {
 			mouses: NodeList.generate(world, Mouse),

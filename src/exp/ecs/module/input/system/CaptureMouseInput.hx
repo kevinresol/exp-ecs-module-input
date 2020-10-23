@@ -11,6 +11,7 @@ private typedef Components = {
  */
 @:nullSafety(Off)
 class CaptureMouseInput extends System {
+	final list:NodeList<Components>;
 	var nodes:Array<Node<Components>>;
 
 	var leftDown = false;
@@ -22,10 +23,17 @@ class CaptureMouseInput extends System {
 	var x:Int;
 	var y:Int;
 
-	public function new(nodes:NodeList<Components>) {
-		// TODO: cleanup
-		nodes.bind(v -> this.nodes = v, tink.state.Scheduler.direct);
-		kha.input.Mouse.get(0).notify(onDown, onUp, onMove, onWheel, onLeave);
+	public function new(list) {
+		this.list = list;
+	}
+
+	override function initialize():tink.core.Callback.CallbackLink {
+		final mouse = kha.input.Mouse.get(0);
+		mouse.notify(onDown, onUp, onMove, onWheel, onLeave);
+		return [
+			list.bind(v -> nodes = v, tink.state.Scheduler.direct),
+			mouse.remove.bind(onDown, onUp, onMove, onWheel, onLeave),
+		];
 	}
 
 	override function update(dt:Float) {
