@@ -10,10 +10,7 @@ private typedef Components = {
  * Capture user input
  */
 @:nullSafety(Off)
-class CaptureMouseInput extends System {
-	final list:NodeList<Components>;
-	var nodes:Array<Node<Components>>;
-
+class CaptureMouseInput extends exp.ecs.system.SingleListSystem<Components> {
 	var leftDown = false;
 	var rightDown = false;
 	var middleDown = false;
@@ -23,15 +20,11 @@ class CaptureMouseInput extends System {
 	var x:Int;
 	var y:Int;
 
-	public function new(list) {
-		this.list = list;
-	}
-
 	override function initialize():tink.core.Callback.CallbackLink {
 		final mouse = kha.input.Mouse.get(0);
 		mouse.notify(onDown, onUp, onMove, onWheel, onLeave);
 		return [
-			list.bind(v -> nodes = v, tink.state.Scheduler.direct),
+			super.initialize(), //
 			mouse.remove.bind(onDown, onUp, onMove, onWheel, onLeave),
 		];
 	}

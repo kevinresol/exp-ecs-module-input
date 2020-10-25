@@ -15,25 +15,25 @@ private typedef Components = {
 }
 
 private typedef Lists = {
-	final mouses:NodeList<MouseComponents>;
-	final nodes:NodeList<Components>;
+	final mouses:ObservableNodeList<MouseComponents>;
+	final nodes:ObservableNodeList<Components>;
 }
 
 @:nullSafety(Off)
 class DetectMouseInteraction2 extends System {
-	final lists:Lists;
+	final trackers:Lists;
 
-	var mouses:Array<Node<MouseComponents>>;
-	var nodes:Array<Node<Components>>;
+	var mouses:NodeList<MouseComponents>;
+	var nodes:NodeList<Components>;
 
-	public function new(lists) {
-		this.lists = lists;
+	public function new(trackers) {
+		this.trackers = trackers;
 	}
 
 	override function initialize():tink.core.Callback.CallbackLink {
 		return [
-			lists.mouses.bind(v -> this.mouses = v, tink.state.Scheduler.direct),
-			lists.nodes.bind(v -> this.nodes = v, tink.state.Scheduler.direct),
+			trackers.mouses.bind(v -> this.mouses = v, tink.state.Scheduler.direct),
+			trackers.nodes.bind(v -> this.nodes = v, tink.state.Scheduler.direct),
 		];
 	}
 
