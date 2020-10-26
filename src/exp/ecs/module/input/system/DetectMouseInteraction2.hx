@@ -30,7 +30,7 @@ class DetectMouseInteraction2 extends System {
 		this.trackers = trackers;
 	}
 
-	override function initialize():tink.core.Callback.CallbackLink {
+	override function initialize(_):tink.core.Callback.CallbackLink {
 		return [
 			trackers.mouses.bind(v -> this.mouses = v, tink.state.Scheduler.direct),
 			trackers.nodes.bind(v -> this.nodes = v, tink.state.Scheduler.direct),
@@ -71,7 +71,7 @@ class DetectMouseInteraction2 extends System {
 		// @formatter:off
 		return {
 			mouses: NodeList.generate(world, Mouse),
-			nodes: NodeList.generate(world, @:field(transform) Transform2 && Circle && @:field(interactive) MouseInteractive),
+			nodes: NodeList.generate(world, @:component(transform) Transform2 && Circle && @:component(interactive) MouseInteractive),
 		}
 		// @formatter:on
 	}

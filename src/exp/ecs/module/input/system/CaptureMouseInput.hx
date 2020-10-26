@@ -20,11 +20,11 @@ class CaptureMouseInput extends exp.ecs.system.SingleListSystem<Components> {
 	var x:Int;
 	var y:Int;
 
-	override function initialize():tink.core.Callback.CallbackLink {
+	override function initialize(world):tink.core.Callback.CallbackLink {
 		final mouse = kha.input.Mouse.get(0);
 		mouse.notify(onDown, onUp, onMove, onWheel, onLeave);
 		return [
-			super.initialize(), //
+			super.initialize(world), //
 			mouse.remove.bind(onDown, onUp, onMove, onWheel, onLeave),
 		];
 	}
