@@ -105,9 +105,9 @@ class CaptureMouseInput extends exp.ecs.system.SingleListSystem<Components> {
 
 	function onLeave() {}
 
-	public static function getNodes(world:World) {
+	public static function getSpec() {
 		// @formatter:off
-		return NodeList.generate(world, Mouse);
+		return NodeList.spec(Mouse);
 		// @formatter:on
 	}
 }

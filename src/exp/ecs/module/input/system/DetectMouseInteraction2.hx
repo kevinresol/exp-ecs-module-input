@@ -1,5 +1,6 @@
 package exp.ecs.module.input.system;
 
+import exp.ecs.NodeList;
 import exp.ecs.module.input.component.*;
 import exp.ecs.module.transform.component.*;
 import exp.ecs.module.geometry.component.*;
@@ -14,26 +15,26 @@ private typedef Components = {
 	final interactive:MouseInteractive;
 }
 
-private typedef Lists = {
-	final mouses:ObservableNodeList<MouseComponents>;
-	final nodes:ObservableNodeList<Components>;
+private typedef Specs = {
+	final mouses:NodeListSpec<MouseComponents>;
+	final nodes:NodeListSpec<Components>;
 }
 
 @:nullSafety(Off)
 class DetectMouseInteraction2 extends System {
-	final trackers:Lists;
+	final specs:Specs;
 
 	var mouses:NodeList<MouseComponents>;
 	var nodes:NodeList<Components>;
 
-	public function new(trackers) {
-		this.trackers = trackers;
+	public function new(specs) {
+		this.specs = specs;
 	}
 
-	override function initialize(_):tink.core.Callback.CallbackLink {
+	override function initialize(world:World):tink.core.Callback.CallbackLink {
 		return [
-			trackers.mouses.bind(v -> this.mouses = v, tink.state.Scheduler.direct),
-			trackers.nodes.bind(v -> this.nodes = v, tink.state.Scheduler.direct),
+			NodeList.make(world, specs.mouses).bind(v -> this.mouses = v, tink.state.Scheduler.direct),
+			NodeList.make(world, specs.nodes).bind(v -> this.nodes = v, tink.state.Scheduler.direct),
 		];
 	}
 
@@ -67,11 +68,11 @@ class DetectMouseInteraction2 extends System {
 		}
 	}
 
-	public static function getNodes(world:World):Lists {
+	public static function getSpec():Specs {
 		// @formatter:off
 		return {
-			mouses: NodeList.generate(world, Mouse),
-			nodes: NodeList.generate(world, @:component(transform) Transform2 && Circle && @:component(interactive) MouseInteractive),
+			mouses: NodeList.spec(Mouse),
+			nodes: NodeList.spec(@:component(transform) Transform2 && Circle && @:component(interactive) MouseInteractive),
 		}
 		// @formatter:on
 	}

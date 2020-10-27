@@ -23,9 +23,9 @@ class CopyMousePosition2 extends exp.ecs.system.SingleListSystem<Components> {
 		}
 	}
 
-	public static function getNodes(world:World) {
+	public static function getSpec() {
 		// @formatter:off
-		return NodeList.generate(world, Mouse && @:component(transform) Transform2);
+		return NodeList.spec(Mouse && @:component(transform) Transform2);
 		// @formatter:on
 	}
 }
