@@ -31,11 +31,10 @@ class DetectMouseInteraction2 extends System {
 		this.specs = specs;
 	}
 
-	override function initialize(world:World):tink.core.Callback.CallbackLink {
-		return [
-			NodeList.make(world, specs.mouses).bind(v -> this.mouses = v, tink.state.Scheduler.direct),
-			NodeList.make(world, specs.nodes).bind(v -> this.nodes = v, tink.state.Scheduler.direct),
-		];
+	override function initialize(world:World) {
+		return NodeList.make(world, specs.mouses)
+			.bind(v -> this.mouses = v, tink.state.Scheduler.direct) & NodeList.make(world, specs.nodes)
+			.bind(v -> this.nodes = v, tink.state.Scheduler.direct);
 	}
 
 	override function update(dt:Float) {
