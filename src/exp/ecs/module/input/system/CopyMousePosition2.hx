@@ -16,8 +16,8 @@ private typedef Components = {
 class CopyMousePosition2 extends exp.ecs.system.SingleListSystem<Components> {
 	override function update(dt:Float) {
 		for (node in nodes) {
-			final mouse = node.components.mouse;
-			final position = node.components.transform.position;
+			final mouse = node.data.mouse;
+			final position = node.data.transform.position;
 			position.x = mouse.x;
 			position.y = mouse.y;
 		}

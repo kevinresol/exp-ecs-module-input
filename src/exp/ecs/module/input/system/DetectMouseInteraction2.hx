@@ -43,17 +43,17 @@ class DetectMouseInteraction2 extends System {
 			final mx = mouse.x;
 			final my = mouse.y;
 			for (node in nodes) {
-				final interactive = node.components.interactive;
+				final interactive = node.data.interactive;
 
 				// reset
 				interactive.clicked = false;
 
-				final transform = node.components.transform;
-				final radius = node.components.circle.radius;
+				final transform = node.data.transform;
+				final radius = node.data.circle.radius;
 				final dx = transform.global.tx - mx;
 				final dy = transform.global.ty - my;
 				final hovered = dx <= radius && dy <= radius && dx * dx + dy * dy < radius * radius;
-				node.components.interactive.hovered = hovered;
+				node.data.interactive.hovered = hovered;
 				if (hovered && mouse.leftButton.justDown) {
 					interactive.down = true;
 				}

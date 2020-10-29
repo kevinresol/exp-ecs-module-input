@@ -28,7 +28,7 @@ class CaptureMouseInput extends exp.ecs.system.SingleListSystem<Components> {
 
 	override function update(dt:Float) {
 		for (node in nodes) {
-			final mouse = node.components.mouse;
+			final mouse = node.data.mouse;
 
 			mouse.leftButton.reset();
 			mouse.rightButton.reset();

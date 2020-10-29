@@ -22,7 +22,7 @@ class CaptureKeyboardInput extends exp.ecs.system.SingleListSystem<Components> {
 
 	override function update(dt:Float) {
 		for (node in nodes) {
-			final keyboard = node.components.keyboard;
+			final keyboard = node.data.keyboard;
 
 			// reset justDown/Up
 			for (last in lastEvents) {
