@@ -20,6 +20,10 @@ class CaptureMouseInput extends exp.ecs.system.SingleListSystem<Components> {
 	var x:Int;
 	var y:Int;
 
+	public function new() {
+		super(NodeList.spec(Mouse));
+	}
+
 	override function initialize(world) {
 		final mouse = kha.input.Mouse.get(0);
 		mouse.notify(onDown, onUp, onMove, onWheel, onLeave);
@@ -101,10 +105,4 @@ class CaptureMouseInput extends exp.ecs.system.SingleListSystem<Components> {
 	function onWheel(delta) {}
 
 	function onLeave() {}
-
-	public static function getSpec() {
-		// @formatter:off
-		return NodeList.spec(Mouse);
-		// @formatter:on
-	}
 }

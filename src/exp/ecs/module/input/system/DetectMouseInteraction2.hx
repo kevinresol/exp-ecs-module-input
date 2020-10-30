@@ -27,8 +27,11 @@ class DetectMouseInteraction2 extends System {
 	var mouses:NodeList<MouseComponents>;
 	var nodes:NodeList<Components>;
 
-	public function new(specs) {
-		this.specs = specs;
+	public function new() {
+		this.specs = {
+			mouses: NodeList.spec(Mouse),
+			nodes: NodeList.spec(@:component(transform) Transform2 && Circle && @:component(interactive) MouseInteractive),
+		}
 	}
 
 	override function initialize(world:World) {
@@ -39,7 +42,7 @@ class DetectMouseInteraction2 extends System {
 
 	override function update(dt:Float) {
 		for (mouse in mouses) {
-			final mouse = mouse.components.mouse;
+			final mouse = mouse.data.mouse;
 			final mx = mouse.x;
 			final my = mouse.y;
 			for (node in nodes) {
@@ -65,14 +68,5 @@ class DetectMouseInteraction2 extends System {
 				}
 			}
 		}
-	}
-
-	public static function getSpec():Specs {
-		// @formatter:off
-		return {
-			mouses: NodeList.spec(Mouse),
-			nodes: NodeList.spec(@:component(transform) Transform2 && Circle && @:component(interactive) MouseInteractive),
-		}
-		// @formatter:on
 	}
 }

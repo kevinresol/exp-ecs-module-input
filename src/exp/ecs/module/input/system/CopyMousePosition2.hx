@@ -14,6 +14,10 @@ private typedef Components = {
  */
 @:nullSafety(Off)
 class CopyMousePosition2 extends exp.ecs.system.SingleListSystem<Components> {
+	public function new() {
+		super(NodeList.spec(Mouse && @:component(transform) Transform2));
+	}
+
 	override function update(dt:Float) {
 		for (node in nodes) {
 			final mouse = node.data.mouse;
@@ -21,11 +25,5 @@ class CopyMousePosition2 extends exp.ecs.system.SingleListSystem<Components> {
 			position.x = mouse.x;
 			position.y = mouse.y;
 		}
-	}
-
-	public static function getSpec() {
-		// @formatter:off
-		return NodeList.spec(Mouse && @:component(transform) Transform2);
-		// @formatter:on
 	}
 }

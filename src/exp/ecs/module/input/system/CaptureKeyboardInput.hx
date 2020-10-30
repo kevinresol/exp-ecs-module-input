@@ -14,6 +14,10 @@ class CaptureKeyboardInput extends exp.ecs.system.SingleListSystem<Components> {
 	var events:Array<KeyEvent> = [];
 	var lastEvents:Array<KeyEvent> = [];
 
+	public function new() {
+		super(NodeList.spec(Keyboard));
+	}
+
 	override function initialize(world) {
 		final keyboard = kha.input.Keyboard.get(0);
 		keyboard.notify(onDown, onUp, onPress);
@@ -63,10 +67,6 @@ class CaptureKeyboardInput extends exp.ecs.system.SingleListSystem<Components> {
 	}
 
 	function onPress(s:String) {}
-
-	public static function getSpec() {
-		return NodeList.spec(Keyboard);
-	}
 }
 
 @:structInit
