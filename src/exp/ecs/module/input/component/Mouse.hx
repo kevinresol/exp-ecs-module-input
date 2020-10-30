@@ -1,31 +1,22 @@
 package exp.ecs.module.input.component;
 
 class Mouse implements Component {
-	public var x:Int;
-	public var y:Int;
-	public var leftButton:Button = new Button();
-	public var rightButton:Button = new Button();
-	public var middleButton:Button = new Button();
-
-	public function new(x, y) {
-		this.x = x;
-		this.y = y;
-	}
+	public var x:Int = 0;
+	public var y:Int = 0;
+	public var dx:Int = 0;
+	public var dy:Int = 0;
+	public var wheel:Int = 0;
+	public final isDown:Map<MouseButton, Bool> = new Map();
+	public final justDown:Map<MouseButton, Bool> = new Map();
+	public final justUp:Map<MouseButton, Bool> = new Map();
 
 	public function clone() {
-		return new Mouse(x, y);
+		return new Mouse(x, y, dx, dy, wheel, isDown.copy(), justDown.copy(), justUp.copy());
 	}
 }
 
-class Button {
-	// up/down status for current frame
-	public var isDown:Bool = false;
-	public var justDown:Bool = false;
-	public var justUp:Bool = false;
-
-	public function new() {}
-
-	public inline function reset() {
-		justDown = justUp = false;
-	}
+@:enum abstract MouseButton(Int) {
+	var Left;
+	var Right;
+	var Middle;
 }

@@ -1,6 +1,6 @@
 package exp.ecs.module.input.system;
 
-import exp.ecs.module.input.component.*;
+import exp.ecs.module.input.component.Keyboard;
 
 private typedef Components = {
 	final keyboard:Keyboard;
@@ -71,7 +71,7 @@ class CaptureKeyboardInput extends exp.ecs.system.SingleListSystem<Components> {
 
 @:structInit
 private class KeyEvent {
-	public final keyCode:kha.input.KeyCode;
+	public final keyCode:KeyCode;
 	public final type:KeyEventType;
 }
 

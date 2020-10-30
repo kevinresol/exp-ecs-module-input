@@ -1,6 +1,6 @@
 package exp.ecs.module.input.system;
 
-import exp.ecs.module.input.component.*;
+import exp.ecs.module.input.component.Mouse;
 
 private typedef Components = {
 	final mouse:Mouse;
@@ -11,14 +11,13 @@ private typedef Components = {
  */
 @:nullSafety(Off)
 class CaptureMouseInput extends exp.ecs.system.SingleListSystem<Components> {
-	var leftDown = false;
-	var rightDown = false;
-	var middleDown = false;
-	var leftUp = false;
-	var rightUp = false;
-	var middleUp = false;
-	var x:Int;
-	var y:Int;
+	var x:Int = 0;
+	var y:Int = 0;
+	var dx:Int = 0;
+	var dy:Int = 0;
+	var wheel:Int = 0;
+	var events:Array<MouseEvent> = [];
+	var lastEvents:Array<MouseEvent> = [];
 
 	public function new() {
 		super(NodeList.spec(Mouse));
@@ -33,76 +32,74 @@ class CaptureMouseInput extends exp.ecs.system.SingleListSystem<Components> {
 	override function update(dt:Float) {
 		for (node in nodes) {
 			final mouse = node.data.mouse;
-
-			mouse.leftButton.reset();
-			mouse.rightButton.reset();
-			mouse.middleButton.reset();
-
 			mouse.x = x;
 			mouse.y = y;
+			mouse.dx = dx;
+			mouse.dy = dy;
+			mouse.wheel = wheel;
 
-			if (leftDown) {
-				mouse.leftButton.isDown = true;
-				mouse.leftButton.justDown = true;
-				leftDown = false;
+			// reset justDown/Up
+			for (last in lastEvents) {
+				final button = last.button;
+				switch last.type {
+					case Down:
+						mouse.justDown[button] = false;
+					case Up:
+						mouse.justUp[button] = false;
+				}
 			}
-			if (rightDown) {
-				mouse.rightButton.isDown = true;
-				mouse.rightButton.justDown = true;
-				rightDown = false;
-			}
-			if (middleDown) {
-				mouse.middleButton.isDown = true;
-				mouse.middleButton.justDown = true;
-				middleDown = false;
-			}
-			if (leftUp) {
-				mouse.leftButton.isDown = false;
-				mouse.leftButton.justUp = true;
-				leftUp = false;
-			}
-			if (rightUp) {
-				mouse.rightButton.isDown = false;
-				mouse.rightButton.justUp = true;
-				rightUp = false;
-			}
-			if (middleUp) {
-				mouse.middleButton.isDown = false;
-				mouse.middleButton.justUp = true;
-				middleUp = false;
+
+			// set for current frame
+			for (event in events) {
+				final button = event.button;
+				switch event.type {
+					case Down:
+						mouse.isDown[button] = mouse.justDown[button] = true;
+					case Up:
+						mouse.isDown[button] = !(mouse.justUp[button] = true);
+				}
 			}
 		}
+
+		// reset deltas
+		dx = dy = wheel = 0;
+
+		// rotate array
+		final tmp = lastEvents;
+		lastEvents = events;
+		events = tmp;
+		events.resize(0);
 	}
 
-	function onDown(button, x, y) {
-		switch button {
-			case 0:
-				leftDown = true;
-			case 1:
-				rightDown = true;
-			case 2:
-				middleDown = true;
-		}
+	function onDown(button:Int, x, y) {
+		events.push({button: cast button, type: Down});
 	}
 
-	function onUp(button, x, y) {
-		switch button {
-			case 0:
-				leftUp = true;
-			case 1:
-				rightUp = true;
-			case 2:
-				middleUp = true;
-		}
+	function onUp(button:Int, x, y) {
+		events.push({button: cast button, type: Up});
 	}
 
 	function onMove(x, y, dx, dy) {
 		this.x = x;
 		this.y = y;
-		// trace('moved $x, $y');
+		this.dx += dx;
+		this.dy += dy;
 	}
 
-	function onWheel(delta) {}
+	function onWheel(delta) {
+		this.wheel += delta;
+	}
 
 	function onLeave() {}
+}
+
+@:structInit
+private class MouseEvent {
+	public final button:MouseButton;
+	public final type:MouseEventType;
+}
+
+private enum abstract MouseEventType(Bool) {
+	var Down = true;
+	var Up = false;
 }

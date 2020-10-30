@@ -57,11 +57,11 @@ class DetectMouseInteraction2 extends System {
 				final dy = transform.global.ty - my;
 				final hovered = dx <= radius && dy <= radius && dx * dx + dy * dy < radius * radius;
 				node.data.interactive.hovered = hovered;
-				if (hovered && mouse.leftButton.justDown) {
+				if (hovered && mouse.justDown.get(Left)) {
 					interactive.down = true;
 				}
 
-				if (interactive.down && mouse.leftButton.justUp) {
+				if (interactive.down && mouse.justUp.get(Left)) {
 					if (hovered)
 						interactive.clicked = true;
 					interactive.down = false;
